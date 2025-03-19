@@ -12,7 +12,13 @@ class BannerService {
     async getAllBanners() {
         try {
             // Kiểm tra kết nối trước khi thực hiện request
-            await this.checkConnection();
+            let isConnected = false;
+            try {
+                isConnected = await this.checkConnection();
+            } catch (connError) {
+                console.log('Lỗi kiểm tra kết nối:', connError.message);
+                // Tiếp tục thực hiện request dù lỗi kết nối, để retry logic trong APIClient có thể hoạt động
+            }
             
             const response = await APIClient.get(API_ENDPOINTS.BANNER.GET_ALL);
             
@@ -47,7 +53,12 @@ class BannerService {
     async getBannerById(bannerId) {
         try {
             // Kiểm tra kết nối trước khi thực hiện request
-            await this.checkConnection();
+            try {
+                await this.checkConnection();
+            } catch (connError) {
+                console.log('Lỗi kiểm tra kết nối:', connError.message);
+                // Tiếp tục thực hiện request
+            }
             
             const response = await APIClient.post(API_ENDPOINTS.BANNER.GET_BY_ID, { bid: bannerId });
             
@@ -83,8 +94,15 @@ class BannerService {
             const result = await this.getAllBanners();
             
             if (result.code === 200 && Array.isArray(result.data)) {
+                // Kiểm tra dữ liệu hợp lệ trước khi xử lý
+                const validBanners = result.data.filter(banner => 
+                    banner && typeof banner === 'object' && 
+                    banner.hasOwnProperty('imageUrl') && 
+                    banner.hasOwnProperty('isActive')
+                );
+                
                 // Lọc các banner đang active và sắp xếp theo thứ tự
-                const activeBanners = result.data
+                const activeBanners = validBanners
                     .filter(banner => banner.isActive === true && banner.deleted !== true)
                     .sort((a, b) => a.order - b.order);
                 
@@ -109,6 +127,7 @@ class BannerService {
     /**
      * Kiểm tra kết nối tới server
      * @private
+     * @returns {Promise<boolean>} Kết quả kiểm tra kết nối
      */
     async checkConnection() {
         try {
@@ -116,6 +135,7 @@ class BannerService {
             if (!isConnected) {
                 throw new Error('Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.');
             }
+            return true;
         } catch (error) {
             console.error('Lỗi kiểm tra kết nối:', error);
             throw error;
