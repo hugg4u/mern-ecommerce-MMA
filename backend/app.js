@@ -13,11 +13,11 @@ import seedUsersAndReviews from "./seedUsers.js";
 import seedBanner from "./seedBanner.js";
 const PORT = process.env.PORT || 9999
 
-app.use(cors(corsConfig));
+app.use(cors());
 app.use(Express.json({ limit: '50mb' }));
 app.use(Express.urlencoded({ limit: '50mb', extended: true }));
 //below consist some issues when runing in deployement env
-app.use(logger);
+// app.use(logger);
 
 // import routes
 import AuthRoute from './Routes/Auth/AuthRoute.js'

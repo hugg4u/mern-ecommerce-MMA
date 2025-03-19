@@ -8,7 +8,6 @@ import PaymentManag from './Pages/PaymentManag/PaymentManag';
 import InventoryManag from './Pages/InventoryManag/InventoryManag';
 import StaffManag from './Pages/StaffManag/StaffManag';
 import BannerManag from './Pages/BannerManag/BannerManag';
-import BannerDetailPage from './Pages/BannerManag/BannerDetailPage';
 import Profile from './Pages/MyProfile/Profile';
 import NotFound from './Pages/Error/NotFound';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -34,7 +33,6 @@ function App() {
             <Route path='payment' element={<PaymentManag />} />
             <Route path='inventory' element={<InventoryManag />} />
             <Route path='banner' element={<BannerManag />} />
-            <Route path='banner/:id' element={<BannerDetailPage />} />
             <Route path='staff' element={<StaffManag />} />
             {/* below was nested bcz needed in the main page*/}
             <Route path='staff/edit/:email' element={<EditStaff />} />
