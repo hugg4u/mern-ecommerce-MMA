@@ -320,5 +320,60 @@ class ProductController {
             });
         }
     }
+    /**
+     * Lấy danh sách tất cả các danh mục sản phẩm hiện có
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @returns {Object} Response với danh sách categories
+     */
+    getCategories = async (req, res) => {
+        try {
+            // Lấy tất cả các danh mục khác nhau từ các sản phẩm có trong database
+            const categories = await Product.distinct('category', { deleted: false });
+            
+            // Lọc bỏ các giá trị null, undefined hoặc rỗng
+            const validCategories = categories.filter(cat => cat && cat.trim() !== '');
+            
+            // Mảng chứa danh mục đã được format với hình ảnh tương ứng
+            const formattedCategories = [];
+            
+            // Với mỗi danh mục, tìm sản phẩm đầu tiên thuộc danh mục đó để lấy hình ảnh
+            for (const category of validCategories) {
+                // Tìm sản phẩm đầu tiên thuộc danh mục và chưa bị xóa
+                const product = await Product.findOne({ 
+                    category, 
+                    deleted: false,
+                    imgUrl: { $ne: null, $ne: '' } // Đảm bảo có hình ảnh
+                }).sort('created_at');
+                
+                // Dữ liệu mặc định cho trường hợp không tìm thấy sản phẩm nào thuộc danh mục
+                let imageUrl = 'https://res.cloudinary.com/dfgxkw3bn/image/upload/v1711011009/hela-shop/categories/default_hjkiig.jpg';
+                
+                // Nếu tìm thấy sản phẩm thuộc danh mục, sử dụng hình ảnh của sản phẩm đó
+                if (product && product.imgUrl) {
+                    imageUrl = product.imgUrl;
+                } 
+                
+                // Thêm danh mục đã format vào mảng kết quả
+                formattedCategories.push({
+                    id: category.toLowerCase(),
+                    type: category,
+                    imageUrl: imageUrl
+                });
+            }
+            
+            return response(res, 200, HttpStatus.getStatus(200), {
+                categories: formattedCategories,
+                code: 200,
+                message: "Lấy danh sách danh mục thành công"
+            });
+        } catch (error) {
+            console.error('Lỗi khi lấy danh sách danh mục:', error);
+            return response(res, 500, HttpStatus.getStatus(500), {
+                error: error.message,
+                code: 500
+            });
+        }
+    }
 }
 export default ProductController = new ProductController()

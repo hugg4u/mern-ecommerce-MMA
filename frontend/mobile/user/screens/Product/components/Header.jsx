@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import CusColors from '../../../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Header() {
+export default function Header({ name = "Sản phẩm" }) {
     const navigation = useNavigation()
     return (
         <View className=' flex-row justify-between items-center  px-[12px] mt-3 mb-5'>
@@ -19,7 +19,7 @@ export default function Header() {
                     </TouchableNativeFeedback>
                 </View>
                 <View className='overflow-hidden'>
-                    <Text className='font-montBold text-xl'>Nike Jord</Text>
+                    <Text className='font-montBold text-xl'>{name}</Text>
                 </View>
             </View>
             {/*  btns */}

@@ -1,22 +1,39 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableNativeFeedback } from 'react-native'
 import React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import CusColors from '../../../constants/Colors'
 
-export default function ProductFooter() {
+export default function ProductFooter({ product }) {
+    const handleAddToCart = () => {
+        // Xử lý thêm vào giỏ hàng
+        console.log('Thêm vào giỏ hàng:', product?.name);
+    };
+
+    const handleBuyNow = () => {
+        // Xử lý mua ngay
+        console.log('Mua ngay:', product?.name);
+    };
+
     return (
-        <View className='bg-white w-full p-3 px-4 flex-row justify-between items-center relative bottom-0'>
-
-            <View className='flex-1 mr-4'>
-                <TouchableOpacity className=' p-2 rounded-md border-2 border-indigo-600' activeOpacity={0.8}>
-                    <Text className='font-montSemiBold text-center text-xl text-indigo-600'>Back</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View className='flex-1'>
-                <TouchableOpacity className='bg-indigo-600 p-2 rounded-md ' activeOpacity={0.8}>
-                    <Text className='font-montSemiBold text-center text-xl text-white'>Buy Now</Text>
-                </TouchableOpacity>
-            </View>
+        <View className='flex-row justify-between px-3 py-2 bg-white border-t border-gray-200'>
+            <TouchableNativeFeedback
+                background={TouchableNativeFeedback.Ripple(CusColors.RIPPLECOLOR)}
+                onPress={handleAddToCart}
+            >
+                <View className='flex-1 mr-2 px-4 py-2 rounded-md bg-blue-100 justify-center items-center'>
+                    <Text className='font-montSemiBold text-blue-600'>Thêm vào giỏ hàng</Text>
+                </View>
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback 
+                background={TouchableNativeFeedback.Ripple(CusColors.RIPPLECOLOR)}
+                onPress={handleBuyNow}
+                disabled={product?.stock !== 'in stock'}
+            >
+                <View className={`flex-1 ml-2 px-4 py-2 rounded-md justify-center items-center ${product?.stock === 'in stock' ? 'bg-blue-600' : 'bg-gray-400'}`}>
+                    <Text className='font-montSemiBold text-white'>
+                        {product?.stock === 'in stock' ? 'Mua ngay' : 'Hết hàng'}
+                    </Text>
+                </View>
+            </TouchableNativeFeedback>
         </View>
     )
 }

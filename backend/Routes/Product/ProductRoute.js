@@ -6,7 +6,7 @@ import validateToken from "../../MiddleWare/Auth/ValidateToken.js";
 
 const router = Express.Router();
 
-router.get("/get-products", validateToken, ProductController.getProducts)
+router.get("/get-products", ProductController.getProducts)
 router.post("/get-product",validateToken,validateScehma(ProductYup.getProduct),ProductController.getProduct)
 router.post("/add-product", validateToken ,validateScehma(ProductYup.addProduct), ProductController.addProduct)
 router.post("/create-product", validateToken ,validateScehma(ProductYup.addProduct), ProductController.addProduct)
@@ -14,5 +14,6 @@ router.post("/add-product-review", validateToken ,validateScehma(ProductYup.addR
 router.post("/delete-product", validateToken ,validateScehma(ProductYup.deleteProduct), ProductController.deleteProduct)
 router.post("/update-product", validateToken ,validateScehma(ProductYup.updateProduct), ProductController.updateProduct)
 router.post("/upload-image", validateToken, validateScehma(ProductYup.uploadImage), ProductController.uploadProductImage)
+router.get("/get-categories", ProductController.getCategories)
 
 export default router

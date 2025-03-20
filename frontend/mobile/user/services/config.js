@@ -41,6 +41,13 @@ export const API_ENDPOINTS = {
         GET_BY_ID: 'banner/get-banner',
     },
     
+    // Product
+    PRODUCT: {
+        GET_ALL: 'product/get-products',
+        GET_BY_ID: 'product/get-product',
+        GET_CATEGORIES: 'product/get-categories',
+    },
+    
     // Thêm các endpoint khác ở đây
 };
 
