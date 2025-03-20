@@ -111,7 +111,7 @@ export default function Product() {
         <>
             <SafeAreaView className='flex-1 bg-white'>
                 {/* header row */}
-                <Header name={product.name}/>
+                <Header name={product?.name || "Sản phẩm"} />
                 {/* main content */}
                 <FlatList
                     style={{ backgroundColor: 'white' }}
@@ -167,8 +167,11 @@ export default function Product() {
                                 </View>
 
                                 {/* reveiws and ratings compo */}
-                                <TouchableOpacity onPress={() => { handleOpenPress() }} activeOpacity={1}>
-                                    <ReviewCard reviews={product.review} />
+                                <TouchableOpacity 
+                                    onPress={handleOpenPress} 
+                                    activeOpacity={0.8}
+                                >
+                                    <ReviewCard reviews={product?.review || []} />
                                 </TouchableOpacity>
                                 
                                 {/* row4 - similar products */}

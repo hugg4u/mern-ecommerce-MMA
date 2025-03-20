@@ -13,6 +13,9 @@ const CategoryProducts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Xác định tiêu đề màn hình
+    const screenTitle = category === 'all' ? 'Tất cả sản phẩm' : category;
+
     useEffect(() => {
         fetchProducts();
     }, [category]);
@@ -21,26 +24,61 @@ const CategoryProducts = () => {
         try {
             setLoading(true);
             setError(null);
+            
+            console.log('Bắt đầu tải danh sách sản phẩm cho danh mục:', category);
+            
             const response = await ProductService.getAllProducts();
-            if (response.code === 200 && response.data && response.data.length > 0) {
-                // Lọc sản phẩm theo danh mục
-                const filteredProducts = response.data.filter(
-                    product => product.category === category
-                );
-                setProducts(filteredProducts);
+            console.log('Response từ API:', JSON.stringify(response));
+            
+            // Kiểm tra cả success và code để tương thích với nhiều cách trả về
+            if ((response.success || response.code === 200) && response.data) {
+                let productData = Array.isArray(response.data) ? response.data : response.data.products || [];
+                console.log('Số lượng sản phẩm lấy được:', productData.length);
+                
+                if (category === 'all') {
+                    // Không lọc khi xem tất cả sản phẩm
+                    setProducts(productData);
+                    console.log('Hiển thị tất cả sản phẩm, không lọc');
+                } else {
+                    // Lọc sản phẩm theo danh mục
+                    console.log('Danh mục cần lọc:', category);
+                    const filteredProducts = productData.filter(
+                        product => product.category === category
+                    );
+                    console.log('Số lượng sản phẩm sau khi lọc:', filteredProducts.length);
+                    setProducts(filteredProducts);
+                }
             } else {
+                console.error('API trả về lỗi hoặc không có dữ liệu:', response);
                 setError('Không thể tải danh sách sản phẩm');
             }
         } catch (err) {
             console.error('Lỗi khi fetch products:', err);
-            setError('Lỗi kết nối đến máy chủ');
+            setError('Lỗi kết nối đến máy chủ: ' + (err.message || ''));
         } finally {
             setLoading(false);
         }
     };
 
     // Hiển thị đánh giá sao
-    const renderRating = (rating) => {
+    const renderRating = (item) => {
+        // Tính rating trung bình từ mảng review
+        const calculateRating = () => {
+            if (!item || !item.review || !Array.isArray(item.review) || item.review.length === 0) {
+                return 0;
+            }
+            
+            const sum = item.review.reduce((total, review) => {
+                // Đảm bảo stars là số
+                const stars = parseFloat(review.stars) || 0;
+                return total + stars;
+            }, 0);
+            
+            return sum / item.review.length;
+        };
+        
+        const rating = item.rating || calculateRating();
+        
         const stars = [];
         const fullStars = Math.floor(rating);
         const halfStar = rating - fullStars >= 0.5;
@@ -91,7 +129,7 @@ const CategoryProducts = () => {
             <View style={styles.productInfo}>
                 <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
                 
-                {renderRating(item.rating || 0)}
+                {renderRating(item)}
                 
                 {item.discount > 0 ? (
                     <View style={styles.priceContainer}>
@@ -109,7 +147,7 @@ const CategoryProducts = () => {
 
     return (
         <View style={styles.container}>
-            <Header name={category} />
+            <Header name={screenTitle} />
             
             {loading ? (
                 <View style={styles.loadingContainer}>
@@ -126,7 +164,9 @@ const CategoryProducts = () => {
             ) : (
                 products.length === 0 ? (
                     <View style={styles.emptyContainer}>
-                        <Text style={styles.emptyText}>Không có sản phẩm nào trong danh mục này</Text>
+                        <Text style={styles.emptyText}>
+                            {category === 'all' ? 'Không có sản phẩm nào' : 'Không có sản phẩm nào trong danh mục này'}
+                        </Text>
                     </View>
                 ) : (
                     <FlatList
