@@ -31,7 +31,7 @@ class EmailSender {
         saveOrUpdate()
         return response(res,200,HttpStatus.getStatus(200),{message:"Email Sent to "+user.email})
     }
-    handleEmailError(err, res) {
+    handleEmailError(res, err) {
         console.log(err)
         return response(res, 404, HttpStatus.getStatus(404), { message: err })
     }

@@ -56,23 +56,27 @@ class AuthController {
     }
     // signUp for the mobile
     mobileSignUp = async (req, res) => {
-        const { name, email, password, role, picUrl } = req.body
+        const { name, email, password, role } = req.body
+        console.log('name, email, password, role', name, email, password, role);
+        
         try {
             const existing = await User.findOne({ email })
             if (existing) {
                 return response(res, 403, HttpStatus.getStatus(403), ResTypes.errors.user_exists)
             }
             const hashedPassword = await bcrypt.hash(password, 10)
-            const user = new User({ name, email, password: hashedPassword, role, picUrl })
+            const user = new User({ name, email, password: hashedPassword, role })
             await user.save()
             return response(res, 201, HttpStatus.getStatus(201), ResTypes.successMessages.user_created)
         } catch (error) {
+            console.log('error', error);
             return response(res, 500, HttpStatus.getStatus(500), { message: error })
         }
     }
     //create SignIn
     signIn = async (req, res) => {
         const { email, password, role } = req.body;
+        console.log('email, password, role', email, password, role);
         
         try {
             const user = await User.findOne({ email,role })

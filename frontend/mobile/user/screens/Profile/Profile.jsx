@@ -4,8 +4,11 @@ import { TextInput, Button, Avatar } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import UserService from '../../services/UserService';
+import AuthService from '../../services/AuthService';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Profile() {
+    const navigation = useNavigation();
     const [userData, setUserData] = useState({
         name: '',
         email: '',
@@ -110,6 +113,26 @@ export default function Profile() {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            setLoading(true);
+            const success = await AuthService.logout();
+            
+            if (success) {
+                Alert.alert('Thành công', 'Bạn đã đăng xuất thành công');
+                // Điều hướng về màn hình Home
+                navigation.navigate('Main', { screen: 'homeScreen' });
+            } else {
+                Alert.alert('Lỗi', 'Không thể đăng xuất. Vui lòng thử lại sau.');
+            }
+        } catch (error) {
+            console.error('Lỗi đăng xuất:', error);
+            Alert.alert('Lỗi', 'Đã xảy ra lỗi khi đăng xuất');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <ScrollView className="flex-1 bg-white">
             <View className="p-4">
@@ -183,6 +206,17 @@ export default function Profile() {
                             className="border-blue-500"
                         >
                             Đổi mật khẩu
+                        </Button>
+                        
+                        <Button
+                            mode="outlined"
+                            onPress={handleLogout}
+                            className="border-red-500 mt-4"
+                            loading={loading}
+                            icon="logout"
+                            textColor="red"
+                        >
+                            Đăng xuất
                         </Button>
                     </View>
                 </View>

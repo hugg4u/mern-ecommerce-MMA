@@ -28,12 +28,10 @@ const userSchema = new mongoose.Schema(
         },
         telephone: {
             type: Number,
-            required:true
         },
         gender: {
             type: String,
             lowercase: true,
-            required: true,
             enum:gender
         },
         password: {
@@ -44,7 +42,6 @@ const userSchema = new mongoose.Schema(
         age: {
             type: Number,
             min:[0,'age is positive'],
-            required:true
         },
         isVerfied: {
             type: Boolean,

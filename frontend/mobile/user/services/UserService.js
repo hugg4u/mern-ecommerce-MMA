@@ -24,19 +24,19 @@ class UserService {
 
     async getUserProfile() {
         try {
-            // Sử dụng mock data khi đang phát triển
-            if (this.useMockData) {
-                console.log('Sử dụng mock data cho getUserProfile');
-                return MOCK_USER_DATA;
-            }
+            // // Sử dụng mock data khi đang phát triển
+            // if (this.useMockData) {
+            //     console.log('Sử dụng mock data cho getUserProfile');
+            //     return MOCK_USER_DATA;
+            // }
             
             const response = await APIClient.get(this.GET_USER_PROFILE);
             return response.data;
         } catch (error) {
-            if (this.useMockData) {
-                console.log('Lỗi API, trả về mock data');
-                return MOCK_USER_DATA;
-            }
+            // if (this.useMockData) {
+            //     console.log('Lỗi API, trả về mock data');
+            //     return MOCK_USER_DATA;
+            // }
             throw error;
         }
     }
