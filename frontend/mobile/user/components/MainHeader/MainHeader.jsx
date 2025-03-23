@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import UserService from '../../services/UserService';
 import AuthService from '../../services/AuthService';
+import { useCart } from '../../context/CartContext';
 
 export default function MainHeader({ onSearch, onFilter }) {
     const navigation = useNavigation();
@@ -14,16 +15,31 @@ export default function MainHeader({ onSearch, onFilter }) {
     const [searchText, setSearchText] = useState('');
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [refreshCount, setRefreshCount] = useState(0); // State để theo dõi số lần làm mới
+    const { cart, fetchCart } = useCart(); // Lấy thông tin giỏ hàng
+    
+    // Debug log khi cart thay đổi
+    useEffect(() => {
+        console.log("MainHeader - cart info:", 
+            cart ? `totalItems: ${cart.totalItems}, items length: ${cart.items?.length || 0}` : "cart undefined");
+    }, [cart]);
+    
+    // Đảm bảo cart có giá trị hợp lệ
+    const cartItemCount = cart && !isNaN(cart.totalItems) ? cart.items?.length : 0;
 
     // Sử dụng useFocusEffect để cập nhật trạng thái mỗi khi màn hình được focus
     useFocusEffect(
         useCallback(() => {
             console.log('MainHeader focused - Kiểm tra đăng nhập');
             checkLoginStatus();
+            // Cập nhật giỏ hàng mỗi khi màn hình được focus
+            if (isLoggedIn) {
+                console.log('MainHeader focused - Cập nhật giỏ hàng');
+                fetchCart();
+            }
             return () => {
                 // Cleanup function nếu cần
             };
-        }, [refreshCount]) // Phụ thuộc vào refreshCount để kích hoạt kiểm tra lại
+        }, [refreshCount, isLoggedIn]) // Phụ thuộc vào refreshCount để kích hoạt kiểm tra lại
     );
 
     // Vẫn giữ lại useEffect để kiểm tra ban đầu
@@ -82,6 +98,11 @@ export default function MainHeader({ onSearch, onFilter }) {
         }
     };
 
+    // Xử lý khi người dùng nhấn vào icon giỏ hàng
+    const handleCartPress = () => {
+        navigation.navigate('Cart');
+    };
+
     const handleSearch = (text) => {
         setSearchText(text);
         
@@ -122,6 +143,32 @@ export default function MainHeader({ onSearch, onFilter }) {
             <Appbar.Header className="flex-row justify-between items-center px-[12px] bg-white shadow-sm">
                 <Image className="w-[155px] h-[30px] ml-1" source={require('../../assets/logos/logoAll.jpg')} />
                 <View className="flex-row items-center">
+                    {/* Icon giỏ hàng với badge */}
+                    <TouchableOpacity 
+                        onPress={handleCartPress}
+                        style={{ marginRight: 16, position: 'relative' }}
+                    >
+                        <Ionicons name="cart-outline" size={28} color="#333" />
+                        {cartItemCount > 0 && (
+                            <View style={{
+                                position: 'absolute',
+                                top: -5,
+                                right: -8,
+                                backgroundColor: 'red',
+                                borderRadius: 10,
+                                minWidth: 20,
+                                height: 20,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                paddingHorizontal: 4
+                            }}>
+                                <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+                                    {cartItemCount > 99 ? '99+' : cartItemCount.toString()}
+                                </Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                    
                     {/* Nút làm mới trạng thái (chỉ hiển thị khi debug) */}
                     <TouchableOpacity 
                         onPress={refreshLoginStatus}

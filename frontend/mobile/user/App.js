@@ -1,27 +1,45 @@
+import { StyleSheet, LogBox } from "react-native";
 import { useFonts } from "expo-font";
-import Welcome from "./screens/Welcome";
+import React, { useEffect } from "react";
 import fontFamList from "./constants/FontFamil";
 import AppNavigator from "./navigation/AppNavigator";
-import AuthStack from "./navigation/AuthStack/AuthStack";
 import { PaperProvider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-// added to remove the warnig from parallax
-import './ignoreWarnings'
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemeProvider } from './constants/themeProvider';
+// added to remove the warning from parallax
+import './ignoreWarnings';
+
+// Ignore specific warnings
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+  'ViewPropTypes will be removed from React Native',
+]);
 
 export default function App() {
   const [loaded, error] = useFonts(fontFamList);
+  
   if (!loaded) {
-    return error;
+    return null;
   }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
-        <NavigationContainer>
-          <AppNavigator />
-          {/* <AuthStack/> */}
-        </NavigationContainer>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                <NavigationContainer>
+                  <AppNavigator />
+                </NavigationContainer>
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
       </PaperProvider>
     </GestureHandlerRootView>
   );

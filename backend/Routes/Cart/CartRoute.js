@@ -10,13 +10,13 @@ const router = Express.Router();
 router.get("/get-cart", validateToken, CartController.getCart);
 
 // Route thêm sản phẩm vào giỏ hàng
-router.post("/add-to-cart", validateToken, validateScehma(CartYup.addToCart), CartController.addToCart);
+router.post("/add-to-cart", validateToken, CartController.addToCart);
 
 // Route cập nhật số lượng sản phẩm trong giỏ hàng
-router.post("/update-cart-item", validateToken, validateScehma(CartYup.updateCartItem), CartController.updateCartItem);
+router.post("/update-cart-item", validateToken, CartController.updateCartItem);
 
 // Route xóa sản phẩm khỏi giỏ hàng
-router.post("/remove-from-cart", validateToken, validateScehma(CartYup.removeFromCart), CartController.removeFromCart);
+router.post("/remove-from-cart", validateToken, CartController.removeFromCart);
 
 // Route xóa toàn bộ giỏ hàng
 router.post("/clear-cart", validateToken, CartController.clearCart);

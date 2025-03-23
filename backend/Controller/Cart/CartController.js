@@ -9,7 +9,7 @@ class CartController {
     getCart = async (req, res) => {
         try {
             const userId = req.user.id;
-            
+            console.log('userId', userId);
             // Tìm giỏ hàng của user và populate thông tin sản phẩm
             const cart = await Cart.findOne({ user: userId }).populate({
                 path: 'items.product',
@@ -33,7 +33,7 @@ class CartController {
                     message: "Giỏ hàng trống"
                 });
             }
-            
+            console.log('cart hung', cart);
             return response(res, 200, HttpStatus.getStatus(200), {
                 cart,
                 code: 200,

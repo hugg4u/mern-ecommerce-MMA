@@ -177,7 +177,9 @@ export default function Product() {
                                 {/* row4 - similar products */}
                                 <View className='flex-row justify-between items-center mt-3'>
                                     <Text className="font-montSemiBold text-lg opacity-60">Sản phẩm tương tự</Text>
-                                    <Text className="font-montSemiBold text-lg">🛒</Text>
+                                    <View>
+                                        <Text className="font-montSemiBold text-lg">🛒</Text>
+                                    </View>
                                 </View>
                                 <View className='mb-1'></View>
                             </View>

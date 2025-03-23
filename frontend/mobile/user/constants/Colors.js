@@ -4,5 +4,6 @@ class CusColors{
     static TEXTINPUTERROR = { placeholder: 'red', text: 'red', primary: 'red', underlineColor: 'red', background: 'red' }
     static BGBACK = "#f4f6f8"
     static BGICONSINPUT = "#d1d1d1"
+    static PRIMARY = "#0066cc"
 }
 export default CusColors

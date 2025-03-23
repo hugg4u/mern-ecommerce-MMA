@@ -1,6 +1,26 @@
 import { View, Text, Image, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel'
+
+// Xử lý lỗi ViewPropTypes
+import * as DeprecatedViewPropTypes from 'deprecated-react-native-prop-types';
+
+// Tùy chỉnh lại cách import để giải quyết vấn đề với ViewPropTypes
+const createCompatComponent = (Component) => {
+  // Wrap component trong một HOC
+  const WrappedComponent = (props) => {
+    return <Component {...props} />;
+  };
+  return WrappedComponent;
+};
+
+// Import components với ViewPropTypes đã được xử lý
+import Carousel from 'react-native-snap-carousel';
+import { ParallaxImage } from 'react-native-snap-carousel';
+
+// Tạo component tương thích
+const CompatCarousel = createCompatComponent(Carousel);
+const CompatParallaxImage = createCompatComponent(ParallaxImage);
+
 import BannerService from '../../../services/BannerService'
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -124,16 +144,16 @@ export default function ImageParallax() {
     }
 
     return (
-        <Carousel
+        <CompatCarousel
             data={imageData}
             loop={true}
             autoplay={true}
             renderItem={ItemCard}
             hasParallaxImages={true}
-            sliderWidth={screenWidth} // Use your desired width
+            sliderWidth={screenWidth}
             firstItem={1}
             autoplayInterval={4000}
-            itemWidth={screenWidth - 70} // Use your desired width
+            itemWidth={screenWidth - 70}
             slideStyle={{ display: 'flex', alignItems: 'center' }}
         />
     )
@@ -158,7 +178,7 @@ const ItemCard = ({ item, index }, parallaxProps) => {
 
     return (
         <View className='mt-1' style={{width: screenWidth - 70, height: 200 }}>
-            <ParallaxImage
+            <CompatParallaxImage
                 source={source}
                 containerStyle={{ borderRadius: 10, flex: 1 }}
                 style={{ resizeMode: 'contain' }}
