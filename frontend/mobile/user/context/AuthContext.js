@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   // Kiểm tra trạng thái xác thực khi ứng dụng khởi động
   useEffect(() => {
+    console.log("AuthProvider - khởi động, kiểm tra trạng thái đăng nhập");
     checkLoginStatus();
   }, []);
 
@@ -48,41 +49,54 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("AuthContext - Đang kiểm tra trạng thái đăng nhập");
       setLoading(true);
+      
+      // Lấy token từ AsyncStorage
       const token = await AsyncStorage.getItem('accessToken');
-      const userData = await AsyncStorage.getItem('userData');
       
-      console.log("AuthContext - Kiểm tra token:", token ? "Có token" : "Không có token");
+      console.log("AuthContext - Token từ AsyncStorage:", token ? "Có token" : "Không có token");
       
-      if (token) {
-        setAccessToken(token);
-        
-        if (userData) {
-          try {
-            const parsedUserData = JSON.parse(userData);
-            setUser(parsedUserData);
-            console.log("AuthContext - Đã tải thông tin người dùng:", parsedUserData.name || parsedUserData.email);
-          } catch (e) {
-            console.error("AuthContext - Lỗi khi phân tích dữ liệu người dùng:", e);
-          }
-        }
-        
-        // Đặt isAuthenticated sau khi xác nhận có token
-        setIsAuthenticated(true);
-        console.log("AuthContext - Đã đăng nhập với token:", token.substring(0, 10) + "...");
-        return token; // Trả về token để sử dụng trong các context khác
-      } else {
-        // Nếu không có token, đảm bảo trạng thái là đăng xuất
+      if (!token) {
+        console.log("AuthContext - Không có token, đặt trạng thái là chưa đăng nhập");
         setIsAuthenticated(false);
+        setAccessToken(null);
         setUser(null);
-        console.log("AuthContext - Chưa đăng nhập, không tìm thấy token");
+        setLoading(false);
         return null;
       }
+      
+      // Lấy thông tin người dùng
+      const userData = await AsyncStorage.getItem('userData');
+      
+      // Lưu token vào state
+      setAccessToken(token);
+      
+      // Lưu thông tin người dùng vào state nếu có
+      if (userData) {
+        try {
+          const parsedUserData = JSON.parse(userData);
+          setUser(parsedUserData);
+          console.log("AuthContext - Đã tải thông tin người dùng:", parsedUserData.name || parsedUserData.email);
+        } catch (e) {
+          console.error("AuthContext - Lỗi khi phân tích dữ liệu người dùng:", e);
+        }
+      }
+      
+      // Đặt trạng thái đã đăng nhập
+      setIsAuthenticated(true);
+      console.log("AuthContext - Đã đăng nhập với token:", token.substring(0, 10) + "...");
+      
+      // Kiểm tra lại giá trị isAuthenticated
+      console.log("AuthContext - Trạng thái isAuthenticated:", true);
+      
+      setLoading(false);
+      return token;
     } catch (error) {
       console.error('Lỗi khi kiểm tra trạng thái đăng nhập:', error);
       setIsAuthenticated(false);
-      return null;
-    } finally {
+      setAccessToken(null);
+      setUser(null);
       setLoading(false);
+      return null;
     }
   };
 
@@ -110,6 +124,8 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       
       console.log("Đăng nhập thành công, đã lưu token:", token.substring(0, 10) + "...");
+      console.log("Trạng thái isAuthenticated sau đăng nhập:", true);
+      
       ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
       return true;
     } catch (error) {

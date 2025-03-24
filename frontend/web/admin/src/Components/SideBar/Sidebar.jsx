@@ -42,14 +42,14 @@ export default function Sidebar() {
                                 <span className="hide-menu">User Management</span>
                             </NavLink>
                         </li>
-                        <li className="sidebar-item">
+                        {/* <li className="sidebar-item">
                             <NavLink to={'/main/payment'} className="sidebar-link" aria-expanded="false">
                                 <span>
                                     <i className="ti ti-cash" />
                                 </span>
                                 <span className="hide-menu">Payment Management</span>
                             </NavLink>
-                        </li>
+                        </li> */}
                         <li className="sidebar-item">
                             <NavLink to={'/main/inventory'} className="sidebar-link" aria-expanded="false">
                                 <span>

@@ -136,10 +136,9 @@ export const CartProvider = ({ children }) => {
       const productIdStr = String(productId);
       console.log(`addItemToCart - Kiểu dữ liệu productId: ${typeof productIdStr}, giá trị: ${productIdStr}`);
       
-      const token = await checkLoginStatus(); // Kiểm tra lại trạng thái đăng nhập
-      
-      console.log("addItemToCart - trạng thái đăng nhập:", !!token, "productId:", productIdStr);
-      if (!token) {
+      // Kiểm tra trực tiếp trạng thái đăng nhập từ context
+      console.log("addItemToCart - Trạng thái đăng nhập từ context:", isAuthenticated);
+      if (!isAuthenticated) {
         console.log("addItemToCart - Chưa đăng nhập, không thể thêm vào giỏ hàng");
         ToastAndroid.show('Vui lòng đăng nhập để thêm vào giỏ hàng', ToastAndroid.SHORT);
         return false;

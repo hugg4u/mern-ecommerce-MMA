@@ -160,7 +160,8 @@ export default function MainHeader({ onSearch, onFilter }) {
                                 height: 20,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                paddingHorizontal: 4
+                                paddingHorizontal: 4,
+                                zIndex: 1000
                             }}>
                                 <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
                                     {cartItemCount > 99 ? '99+' : cartItemCount.toString()}

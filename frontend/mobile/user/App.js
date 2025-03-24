@@ -1,6 +1,6 @@
 import { StyleSheet, LogBox } from "react-native";
 import { useFonts } from "expo-font";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import fontFamList from "./constants/FontFamil";
 import AppNavigator from "./navigation/AppNavigator";
 import { PaperProvider } from "react-native-paper";
@@ -21,11 +21,6 @@ LogBox.ignoreLogs([
 
 export default function App() {
   const [loaded, error] = useFonts(fontFamList);
-  
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
