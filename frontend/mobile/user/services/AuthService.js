@@ -64,16 +64,15 @@ class AuthService {
             let userData = null;
             
             // Phân tích phản hồi theo cấu trúc API Backend
-            // Backend trả về: { code, status, data: { token, ...loginSuccessful } }
             if (response.data && response.data.token) {
-                // Trường hợp data trực tiếp chứa token
                 token = response.data.token;
+                userData = response.data.user || response.data;
             } else if (response.code && response.data && response.data.token) {
-                // Trường hợp response có cấu trúc theo response.js: { code, status, data }
                 token = response.data.token;
+                userData = response.data.user || response.data;
             } else if (response.token) {
-                // Trường hợp đơn giản: { token: "..." }
                 token = response.token;
+                userData = response.user || response;
             }
             
             // Lưu token nếu có
@@ -81,9 +80,23 @@ class AuthService {
                 console.log('Lưu token:', token.substring(0, 10) + '...');
                 await this.setAuthToken(token);
                 
+                // Lưu thông tin người dùng
+                if (userData) {
+                    console.log('Lưu thông tin người dùng:', userData.email || userData.name || 'Không có email/tên');
+                    await this.setUserInfo(userData);
+                }
+                
+                // Đồng bộ token với AsyncStorage key @auth_token và accessToken để đảm bảo tương thích
+                await AsyncStorage.setItem('accessToken', token);
+                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                
                 // Kiểm tra token đã lưu thành công
                 const savedToken = await this.getAuthToken();
                 console.log('Token đã lưu:', savedToken ? savedToken.substring(0, 10) + '...' : 'Thất bại');
+                
+                // Kiểm tra trực tiếp accessToken trong AsyncStorage
+                const accessToken = await AsyncStorage.getItem('accessToken');
+                console.log('accessToken trong AsyncStorage:', accessToken ? accessToken.substring(0, 10) + '...' : 'Không có');
                 
                 return { success: true, token, userData };
             } else {

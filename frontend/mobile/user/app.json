@@ -16,16 +16,27 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.helashop.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.helashop.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "scheme": "helashop",
+    "plugins": [
+      "expo-linking"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "helashop-app"
+      }
     }
   }
 }

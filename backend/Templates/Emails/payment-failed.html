@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thất bại - HelaShop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4189e6;
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4189e6;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .info-row {
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .error-icon {
+            font-size: 48px;
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .error-box {
+            background-color: #fff0f0;
+            border: 1px solid #ffcccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .troubleshooting {
+            background-color: #f0f8ff;
+            border: 1px solid #b8daff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HelaShop - Thanh toán thất bại</h1>
+        </div>
+        <div class="content">
+            <div class="error-icon">✗</div>
+            <p>Xin chào {{userName}},</p>
+            <p>Chúng tôi rất tiếc phải thông báo rằng thanh toán của bạn không thành công.</p>
+            
+            <h2>Chi tiết giao dịch:</h2>
+            <div class="info-row">
+                <span class="info-label">Mã đơn hàng:</span> #{{orderNumber}}
+            </div>
+            <div class="info-row">
+                <span class="info-label">Thời gian giao dịch:</span> {{transactionDate}}
+            </div>
+            <div class="info-row">
+                <span class="info-label">Số tiền:</span> {{amount}}đ
+            </div>
+            <div class="info-row">
+                <span class="info-label">Phương thức thanh toán:</span> {{paymentMethod}}
+            </div>
+            
+            <div class="error-box">
+                <div class="info-row">
+                    <span class="info-label">Mã lỗi:</span> {{errorCode}}
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Lỗi:</span> {{errorMessage}}
+                </div>
+            </div>
+            
+            <div class="troubleshooting">
+                <h3>Hướng dẫn khắc phục:</h3>
+                <ul>
+                    <li>Kiểm tra thông tin thẻ/tài khoản ngân hàng của bạn</li>
+                    <li>Đảm bảo tài khoản của bạn có đủ số dư</li>
+                    <li>Kiểm tra hạn mức giao dịch của tài khoản</li>
+                    <li>Đảm bảo bạn đã đăng ký dịch vụ thanh toán trực tuyến</li>
+                    <li>Nếu sử dụng OTP, hãy chắc chắn nhập đúng mã xác thực</li>
+                </ul>
+            </div>
+            
+            <p>Đơn hàng của bạn vẫn được lưu trong hệ thống. Bạn có thể thử thanh toán lại bằng cách nhấn vào nút bên dưới:</p>
+            
+            <div style="text-align: center;">
+                <a href="{{retryUrl}}" class="button">Thử thanh toán lại</a>
+            </div>
+            
+            <p>Nếu bạn tiếp tục gặp vấn đề, hãy liên hệ với chúng tôi qua email {{supportEmail}}.</p>
+            <p>Cảm ơn bạn đã mua sắm tại HelaShop!</p>
+        </div>
+        <div class="footer">
+            <p>© 2023 HelaShop. Tất cả các quyền được bảo lưu.</p>
+            <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email support@helashop.com</p>
+            <p>Đây là email tự động, vui lòng không trả lời email này.</p>
+        </div>
+    </div>
+</body>
+</html> 

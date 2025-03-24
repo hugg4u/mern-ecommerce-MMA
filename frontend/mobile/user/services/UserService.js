@@ -1,4 +1,4 @@
-import APIClient from './APIClient';
+import { fetchWithAuth } from '../utils/apiHelper';
 import { API_CONFIG } from './config';
 
 // Mock data cho phát triển
@@ -13,8 +13,8 @@ const MOCK_USER_DATA = {
 class UserService {
     constructor() {
         this.API_URL = API_CONFIG.BASE_URL;
-        this.GET_USER_PROFILE = `${this.API_URL}/user/profile`;
-        this.UPDATE_USER_PROFILE = `${this.API_URL}/user/update-profile`;
+        this.GET_USER_PROFILE = `${this.API_URL}/user/get-user`;
+        this.UPDATE_USER_PROFILE = `${this.API_URL}/user/update-user`;
         this.UPDATE_PASSWORD = `${this.API_URL}/user/update-password`;
         this.UPLOAD_AVATAR = `${this.API_URL}/user/upload-avatar`;
         
@@ -30,7 +30,7 @@ class UserService {
                 return MOCK_USER_DATA;
             }
             
-            const response = await APIClient.get('user/profile');
+            const response = await fetchWithAuth.get(this.GET_USER_PROFILE);
             return response.data;
         } catch (error) {
             console.error('Lỗi khi lấy thông tin người dùng:', error.message);
@@ -49,7 +49,7 @@ class UserService {
                 return { success: true, message: 'Cập nhật thành công', data: userData };
             }
             
-            const response = await APIClient.post(this.UPDATE_USER_PROFILE, userData);
+            const response = await fetchWithAuth.post(this.UPDATE_USER_PROFILE, userData);
             return response.data;
         } catch (error) {
             throw error;
@@ -63,7 +63,7 @@ class UserService {
                 return { success: true, message: 'Đổi mật khẩu thành công' };
             }
             
-            const response = await APIClient.post(this.UPDATE_PASSWORD, passwordData);
+            const response = await fetchWithAuth.post(this.UPDATE_PASSWORD, passwordData);
             return response.data;
         } catch (error) {
             throw error;
@@ -83,7 +83,7 @@ class UserService {
             
             const formData = new FormData();
             formData.append('avatar', imageData);
-            const response = await APIClient.post(this.UPLOAD_AVATAR, formData, {
+            const response = await fetchWithAuth.post(this.UPLOAD_AVATAR, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
